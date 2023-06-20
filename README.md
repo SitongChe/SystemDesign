@@ -35,8 +35,14 @@
      - Frontend constantly checks if the task is done.
   - Backends become nearly infinitely scalable, and frontends become fast.
   - If a task is time-consuming, try to do it asynchronously.
+  
+  - Practice
+    - HelloWorld
+        - [send.py](HelloWorld/send.py)
+        - [receive.py] (HelloWorld/receive.py)
 
-## Practice
-- RabbitMQ: [RabbitMQ Documentation](https://web.archive.org/web/20230221220524/http://www.rabbitmq.com/)
+## Reference
+- [RabbitMQ Tutorials](https://web.archive.org/web/20230216005331/https://www.rabbitmq.com/tutorials/tutorial-one-python.html)
+    
 
-Reference: [System Design Primer - System Design Topics](https://github.com/donnemartin/system-design-primer#system-design-topics-start-here)
+- [System Design Primer - System Design Topics](https://github.com/donnemartin/system-design-primer#system-design-topics-start-here)
