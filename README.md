@@ -40,6 +40,33 @@
     - HelloWorld
         - [send.py](HelloWorld/send.py)
         - [receive.py] (HelloWorld/receive.py)
+        
+## Trade-Off
+- Performance vs scalability
+  - performance problem: slow for single user
+  - scalability problem: fast for single user, slow under heavy load.
+  https://image.slidesharecdn.com/scalabilitypatterns20100510-100512004526-phpapp02/75/scalability-availability-stability-patterns-2-2048.jpg?cb=1665169599
+- Latency vs throughput 
+    - Latency: time required to produce some result
+    - Throughput: the number of such results produced per unit of time
+    - 1 s = 100 * 10^6 clock periods
+    - aim for maximal throughput with acceptable latency.
+
+- Availability vs consistency 
+    - CAP theorem: choose 2 out of 3
+    https://github.com/donnemartin/system-design-primer/blob/master/images/bgLMI2u.png
+        - Consistency: Every read receives the most recent write or an error
+        - Availability: Every request receives a response, without guarantee that it contains the most recent version of the information
+        - Partition Tolerance: The system continues to operate despite arbitrary partitioning due to network failures
+        
+        - AC: centralized system, like RDBMS
+        
+    - ACID
+        - Atomic
+        - Consistent
+        - Isolated
+        - Durable
+        
 
 ## Reference
 - [RabbitMQ Tutorials](https://web.archive.org/web/20230216005331/https://www.rabbitmq.com/tutorials/tutorial-one-python.html)
