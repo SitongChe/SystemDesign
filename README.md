@@ -60,6 +60,15 @@
         - Partition Tolerance: The system continues to operate despite arbitrary partitioning due to network failures
         
         - AC: centralized system, like RDBMS
+        - CP: require atomic read and write, can accept timeout error when waiting for a response from the partitioned node
+        - AP: require continue working despite external errors, can accept eventual consistency. write might take some time to propagate when the partition is resolved.
+    -Consistency Patterns
+        - Weak Consistency: after a write, read may or may not see it. Best effort only. Real time use cases: video chat may lose connection for some time
+        - Eventual Consisitency: after a write, read will eventually see it. Data is replicated asyncronously. High availability systems: DNS, email.
+        - Strong Consistency: after a write, read will see it. Data is replicated synchornously. Systems need transactions: file systems, RDBMS
+        
+        
+/Users/chesitong/Documents/Screen Shot 2023-06-24 at 12.38.21 AM.png
         
     - ACID
         - Atomic
