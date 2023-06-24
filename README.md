@@ -45,7 +45,7 @@
 - Performance vs scalability
   - performance problem: slow for single user
   - scalability problem: fast for single user, slow under heavy load.
-  https://image.slidesharecdn.com/scalabilitypatterns20100510-100512004526-phpapp02/75/scalability-availability-stability-patterns-2-2048.jpg?cb=1665169599
+          ![Alt Text](https://image.slidesharecdn.com/scalabilitypatterns20100510-100512004526-phpapp02/75/scalability-availability-stability-patterns-2-2048.jpg?cb=1665169599)
 - Latency vs throughput 
     - Latency: time required to produce some result
     - Throughput: the number of such results produced per unit of time
@@ -54,7 +54,7 @@
 
 - Availability vs consistency 
     - CAP theorem: choose 2 out of 3
-    https://github.com/donnemartin/system-design-primer/blob/master/images/bgLMI2u.png
+            ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/bgLMI2u.png)
         - Consistency: Every read receives the most recent write or an error
         - Availability: Every request receives a response, without guarantee that it contains the most recent version of the information
         - Partition Tolerance: The system continues to operate despite arbitrary partitioning due to network failures
@@ -67,8 +67,7 @@
         - Eventual Consisitency: after a write, read will eventually see it. Data is replicated asyncronously. High availability systems: DNS, email.
         - Strong Consistency: after a write, read will see it. Data is replicated synchornously. Systems need transactions: file systems, RDBMS
         
-        
-/Users/chesitong/Documents/Screen Shot 2023-06-24 at 12.38.21 AM.png
+        ![Alt Text](https://github.com/SitongChe/SystemDesign/blob/main/Consistancy%20Pattern.png?raw=true)
         
     - ACID
         - Atomic
