@@ -39,7 +39,7 @@
   - Practice
     - HelloWorld
         - [send.py](HelloWorld/send.py)
-        - [receive.py] (HelloWorld/receive.py)
+        - [receive.py](HelloWorld/receive.py)
         
 ## Trade-Off
 - Performance vs scalability
@@ -54,6 +54,7 @@
 
 - Availability vs consistency 
     - CAP theorem: choose 2 out of 3
+    
             ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/bgLMI2u.png)
         - Consistency: Every read receives the most recent write or an error
         - Availability: Every request receives a response, without guarantee that it contains the most recent version of the information
