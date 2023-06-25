@@ -62,12 +62,24 @@
         - AC: centralized system, like RDBMS
         - CP: require atomic read and write, can accept timeout error when waiting for a response from the partitioned node
         - AP: require continue working despite external errors, can accept eventual consistency. write might take some time to propagate when the partition is resolved.
-    -Consistency Patterns
+    - Consistency Patterns
         - Weak Consistency: after a write, read may or may not see it. Best effort only. Real time use cases: video chat may lose connection for some time
         - Eventual Consisitency: after a write, read will eventually see it. Data is replicated asyncronously. High availability systems: DNS, email.
         - Strong Consistency: after a write, read will see it. Data is replicated synchornously. Systems need transactions: file systems, RDBMS
         
         ![Alt Text](https://github.com/SitongChe/SystemDesign/blob/main/Consistancy%20Pattern.png?raw=true)
+        
+   - Availability Patterns
+        - Fail-over: more hardware, data loss if active system fails before any newly written data replicated to passive
+            - Active-passive / master-slave: heartbeats are sent between active and passive server on standby. If the heartbeat is interrupted, the passive server takes over the active's IP address and resumes service
+            - Active-active / master-master: both servers are managing traffic, spreading the load between them. DNS/application logic need to know the IP of both servers.
+        - Replication
+            - master-slave
+            - master-master
+        - Availability in parallel vs in sequence
+            - in sequence: Availability (Total) = Availability (Foo) * Availability (Bar)
+            - in parallel(higher): Availability (Total) = 1 - (1 - Availability (Foo)) * (1 - Availability (Bar))
+        
         
     - ACID
         - Atomic
