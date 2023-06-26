@@ -70,7 +70,10 @@
         ![Alt Text](https://github.com/SitongChe/SystemDesign/blob/main/Consistancy%20Pattern.png?raw=true)
         
    - Availability Patterns
-        - Fail-over: more hardware, data loss if active system fails before any newly written data replicated to passive
+        - Fail-over: 
+            - Disadvantages
+                - more hardware
+                - data loss if active system fails before any newly written data replicated to passive
             - Active-passive / master-slave: heartbeats are sent between active and passive server on standby. If the heartbeat is interrupted, the passive server takes over the active's IP address and resumes service
             - Active-active / master-master: both servers are managing traffic, spreading the load between them. DNS/application logic need to know the IP of both servers.
         - Replication
@@ -79,6 +82,31 @@
         - Availability in parallel vs in sequence
             - in sequence: Availability (Total) = Availability (Foo) * Availability (Bar)
             - in parallel(higher): Availability (Total) = 1 - (1 - Availability (Foo)) * (1 - Availability (Bar))
+    - Domain Name System:
+           ![Alt Text]( https://github.com/donnemartin/system-design-primer/blob/master/images/IOyLj4i.jpg)
+        - DNS translate a domain name to an IP address
+        - Disadvantages
+            - accessing a DNS server introduces a slight delay, although mitigated by caching
+            - complex
+            - DDos attack
+    - Content Delivery Network
+        - CDN is globally distributed network of proxy servers, serving content from locations closer to the user. static files, such as HTML, photos, videos are served from CDN. The site's DNS resolution will tell clients which server to contact.
+        - Push CDNs: receive new content when change uploaded. User provide content, upload to CDN and rewrite URL to point to the CDN. Content is uploaded only when it is new or changed, minimizing traffic, maximizing storage.
+        - Pull CDNs [heavy traffic]: receive new content when user request the content. This result in a slower request until the content is cached on the CDN. A TTL time to live determines how long content is cached. minimize storage, but create redundant traffic if file expired or are pulled before file changed.
+            - Sites with heavy traffic should use pull CDNs. As traffic is spread out more evenly with only recently requested content remaining on the CDN.
+        - Disadvantages
+            - Cost could be high depending on traffic, but if not using CDN, alternative cost as well
+            - Content might be stale if updated before TTL expires and the CDN fetches the updated version
+            - CDN require changing URL for static content to poin to the CDN
+        
+    - Scalability Patterns: State
+        - Partitioning
+        - HTTP Caching
+        - RDBMS Sharding
+        - NoSQL
+        - Distributed Caching
+        - Data Grids
+        - Concurrency
         
         
     - ACID
