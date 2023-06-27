@@ -71,7 +71,7 @@
         
    - Availability Patterns
         - Fail-over: 
-            - Disadvantages
+            - Fail Over Disadvantages
                 - more hardware
                 - data loss if active system fails before any newly written data replicated to passive
             - Active-passive / master-slave: heartbeats are sent between active and passive server on standby. If the heartbeat is interrupted, the passive server takes over the active's IP address and resumes service
@@ -104,7 +104,7 @@
         - Push CDNs: receive new content when change uploaded. User provide content, upload to CDN and rewrite URL to point to the CDN. Content is uploaded only when it is new or changed, minimizing traffic, maximizing storage.
         - Pull CDNs [heavy traffic]: receive new content when user request the content. This result in a slower request until the content is cached on the CDN. A TTL time to live determines how long content is cached. minimize storage, but create redundant traffic if file expired or are pulled before file changed.
             - Sites with heavy traffic should use pull CDNs. As traffic is spread out more evenly with only recently requested content remaining on the CDN.
-        - Disadvantages
+        - CDN Disadvantages
             - Cost could be high depending on traffic, but if not using CDN, alternative cost as well
             - Content might be stale if updated before TTL expires and the CDN fetches the updated version
             - CDN require changing URL for static content to poin to the CDN
@@ -130,7 +130,7 @@
             - servers should be stateless: they should not contain any user related data like sessions or profile pictures
             - sessons can be stored in a centralized data store such as a data base or a persistent cache(Redis, Memcached)
             - Downstream servers such as caches and databases need to handle more simultaneous connections as upstream servers scale out
-        - Disadvantages:
+        - Load Balancer Disadvantages:
             - load balancer can be a performance bottle neck if it does not have enough resources or not configured properly
             - a single load balancer is a single point of failure, but configuring multiple load balancers further increase complexity
         
