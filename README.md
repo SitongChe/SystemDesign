@@ -82,6 +82,16 @@
         - Availability in parallel vs in sequence
             - in sequence: Availability (Total) = Availability (Foo) * Availability (Bar)
             - in parallel(higher): Availability (Total) = 1 - (1 - Availability (Foo)) * (1 - Availability (Bar))
+            
+    - Scalability Patterns: State
+        - Partitioning
+        - HTTP Caching
+        - RDBMS Sharding
+        - NoSQL
+        - Distributed Caching
+        - Data Grids
+        - Concurrency
+        
     - Domain Name System:
            ![Alt Text]( https://github.com/donnemartin/system-design-primer/blob/master/images/IOyLj4i.jpg)
         - DNS translate a domain name to an IP address
@@ -98,15 +108,35 @@
             - Cost could be high depending on traffic, but if not using CDN, alternative cost as well
             - Content might be stale if updated before TTL expires and the CDN fetches the updated version
             - CDN require changing URL for static content to poin to the CDN
+            
+    - Load Balancer
+         ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/h81n9iK.png)
+         - preventing requests from going to unhealthy servers
+         - preventing overloading resources
+         - helping to eliminate a single point of failure
+         - SSL termination. Decrypt incoming requests and encrypt server reponse. remove the need to install X.509 certificates on each server
+         - Session persistence. Issue cookies and route a specific client's requests to same instance if the web apps do not keep track of sessions. But it is just basic IP based session, no user profiles.
+         - To protect against failures, set up multiple load balancers, with availability patterns of active-passive or active-active
+         - hardware(expensive) or software(HAProxy)
+         - Layer 4 Load Balancing:
+            - transport layer: source, destination IP address, ports.
+            - forward network packets to and from the upstream server, performing Network Address Translation
+            - require less time and computing source
+         - Layer 7 Load Balancing:
+            - application layer: contents of the header, message, cookies.
+            - terminate network traffic, reads message, makes load balancing decision, open connection to the selected server.
+            - Example: direct video traffic to servers hosts video, also direct user billing traffic to security hardened servers
+         - Horizontal Scaling Disadvantages:
+            - servers should be stateless: they should not contain any user related data like sessions or profile pictures
+            - sessons can be stored in a centralized data store such as a data base or a persistent cache(Redis, Memcached)
+            - Downstream servers such as caches and databases need to handle more simultaneous connections as upstream servers scale out
+        - Disadvantages:
+            - load balancer can be a performance bottle neck if it does not have enough resources or not configured properly
+            - a single load balancer is a single point of failure, but configuring multiple load balancers further increase complexity
         
-    - Scalability Patterns: State
-        - Partitioning
-        - HTTP Caching
-        - RDBMS Sharding
-        - NoSQL
-        - Distributed Caching
-        - Data Grids
-        - Concurrency
+            
+        
+
         
         
     - ACID
