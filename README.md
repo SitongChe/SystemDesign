@@ -159,17 +159,90 @@
         - Application layer disadvantages:
             - loosly couple services, requires a different approach from an architectural, operations, and process viewpoint
             - increase complexity in terms of deployment and operations
-        
-            
-        
-
-        
-        
-    - ACID
-        - Atomic
-        - Consistent
-        - Isolated
-        - Durable
+    - Database
+                     ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/Xkm5CXz.png)
+        - Relational database management system
+            - ACID
+                - Atomic: each transaction is all or nothing
+                - Consistent: any transaction bring the db from one valid state to another
+                - Isolated: executing transactions concurrently has the same result as if the transactions were executed serially
+                - Durable: once a transaction has been committed, it will remain so
+            - Scale up
+                - master/slave replication: master serves both reads and writes, replicating writes to slaves, which serve only reads. Slaves can replicate to additional slaves like tree. If master goes offline, the system can continue to operate in read-only mode until a slave is promoted to a master or a new master is provisioned.
+                                     ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/C9ioGtn.png)
+                    - master/slave replication disadvantages:
+                        - need additional logic to promote a slave to a master
+                        - replication disadvantages as below
+                - master/master replication: both masters serve reads and writes and coordinate with each other on writes. If either master goes down, the system can continue to operate with both reads and writes.
+                    ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/krAHLGg.png)
+                    - master/master replication disadvantages:
+                        - need a load balancer or change to application logic to determine where to write
+                        - loosely consistent(violating ACID) or increased write latency due to synchronization
+                        - conflict resolution are more needed as more write nodes are added and as latency increases
+                        - replication disadvantages as below
+                    - replication disadvantages:
+                        - potential loss of data if master fails before any newly written data can be replicated to other nodes
+                        - writes are replayed to the read replicas. if too many writes, the read replicas can get bogged down with replaying writes and can't do as many reads
+                        - the more read slaves, the more need to replicate, lead to greater replication lag
+                        - replication adds more hardware and additional complexity                                                     
+                - federation: (or functional partitioning) splits up databases by function. for example, insteaf of a single, monolithic database, could have three: forums, users, and products, resulting in less read and write traffic to each database and therefor less replication lag. Smaller db result in more data that can fit in memory, which in turn results in more cache hits due to improved cache locality. With no single central master serializing writes, you can write in parallel, increasing the throughput.
+                    ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/U3qV33e.png)
+                    - federation disadvantages:
+                        - not effective if schema requires huge functions or tables
+                        - need to update application logic to determine which database to read and write
+                        - joining data from 2 databases is more complex with a server link sp_addlinkedserver
+                        - adds more hardware and additional complexity
+                - sharding: sharding distributes data across different db such that each db can only manage a subset of the data. for example, as the number of users increase, more shards are added to the cluster. shard by users' last name initial or geographic location.
+                ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/wU8x5Id.png)
+                    - similar to the advantages of federation, sharding results in less read and write traffic, less replicatiion, and more cache hits. Index size is also reduced, which generally improve perf with faster queries. If one shard goes down, the other shardds are still operational, although replication is needed to avoid data loss. Also no single central master serializing writes allowing writing in parallel with increased throughput
+                    - sharding disadvantages:
+                        - need to update logic to work with shards, which result in complex SQL queries
+                        - data distribution can be lopsided in a shard. A set of power users on a shard could result in increased load to that shard compared to others
+                            - rebalancing add additional complexity, sharding based on consistent hashing can reduce teh amount of transferred data
+                        - joining data from multiple shards is more complex
+                        - sharding adds more hardware and complexity
+                - denormmalization: improve read perf at the expense of some write perf. Redundant copies of the data are written in multiple tables to avoid expensive joins. Some RDBMS support materialized views which handle the work of storing redundant information and keeping redundant copies consistent.
+                    - once data becomes distributed with tech such as federation and sharding, managing joins across data centers further increases complexity. Denormalization might avoid the need for such complex joins
+                    - in most systems, read outnumber writes 100:1 or 1000:1. A read resulting in a complex db join can be very expensive, spending a significant amount of time on disk operations.
+                    - denormalization disadvantages:
+                        - data is duplicated
+                        - constriants can help redundant copies of information stay in sync, which increases complexity of the database design
+                        - a denormalized database under heavy write load might perform worse than its normalized counterpart
+                - SQL tuning
+                    - identify issues: benchmark and profile to simulate and uncover bottlenecks
+                        - benchmark: simulate high-load situations with tools such as ab
+                        - profile: enable tools such as the slow query log to help track perf issues
+                    - Optimizations
+                        - Tighten up the schema
+                            - dumps to disk in contiguous blocks for fast access
+                            - use CHAR instead of VARCHAR for fixed length fields
+                                - CHAR allows for fast, random access, whereas with VARCHAR, you must find the end of a string before moving onto the next one
+                            - use TEXT for large blocks of text such as blog posts
+                                - TEXT allows for boolean searches. Using a TEXT field results in storing a pointer on disk that is used to locate the text block.
+                            - use INT for large numbers up to 2^32 or 4 billion
+                            - use DECIMAL for currency to avoid floating point representation errors
+                            - avoid storing large BLOBS, store the location of where to get the object instead
+                            - VARCHAR(255) is the largest number of characters that can be counted in an 8 bit number, often maximizing the use of a byte in some RDBMS
+                            - Set NOT NULL constraint where applicable to improve search performance. especially if the null fields later updated to non-null.
+                                - NULL values are not indexed in some DB, Oracle
+                        - Use good indices
+                            - SELECT, GROUP BY, ORDER BY, JOIN could be faster with indices
+                            - indices are represented as self-balancing B-tree that keeps data sorted and allows searches, sequential access, insertions, deletions in logarithmic time
+                            - Placing an index can keep data in memory, requiring more space
+                            - Write could be slower since index need to be updated
+                            - When loading large amounts of data, might be faster to disable indices, load the data, then rebuild the indices
+                            
+                        - Avoid expensive joins
+                            - Denormalize where performance demands it
+                        - Partition tables
+                            - break up a table by putting hot spots in a seperate table to help keep it in memory
+                        - Tune the query cache
+                            - in some cases, query cache could lead to perf issue.
+                                - high update rates
+                                - large result sets
+                                - dynamic queries
+                                - data inconsistency
+                                - limited cache size
         
 
 ## Reference
@@ -177,3 +250,5 @@
     
 
 - [System Design Primer - System Design Topics](https://github.com/donnemartin/system-design-primer#system-design-topics-start-here)
+
+- [Crack the system design interview](https://tianpan.co/notes/2016-02-13-crack-the-system-design-interview)
