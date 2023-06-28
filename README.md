@@ -133,6 +133,32 @@
         - Load Balancer Disadvantages:
             - load balancer can be a performance bottle neck if it does not have enough resources or not configured properly
             - a single load balancer is a single point of failure, but configuring multiple load balancers further increase complexity
+    - Reverse Proxy (web server)
+             ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/n41Azff.png)
+        - increased security: hide information about backend servers, blacklist IPs, limit number of connections per client
+        - increased scalability and flexibility: client only see the reverse proxy's IP, allowing scale servers or change configuration
+        - SSL termination: decrypt incoming requests and encrypt server responses so backend servers do not have to perform these expensive operations. remove the need to install X.509 certificates on each server
+        - Compression: compress server responses
+        - Caching: return the response for cached requests
+        - Static content: Serve static conent directly, like HTML photo, videos
+        - Load balancer vs reverse proxy:
+            - load balancer route traffic to a set of servers serving the same function
+            - reverse proxies are useful even for just 1 web/app server
+            - NGINX and HAProxy can support both layer 7 reverse proxying and load balancing
+        - Reverse Proxy Disadvantages:
+            - increased complexity
+            - a single reverse proxy is a single point of failure, configuring multiple reverse proxies (failover) further increase complexity
+    - Application layer
+                 ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/yB5SYwm.png)
+                 
+        - scale out and configure both web layer and application layer independently.
+        - single responsibility principle advocates for small and autonomous services that work together
+        - Microservices: a suite of independently deployable, small, modular services. Each service runs a unique process and communicates through a well-defined, lightweight mechanism to serve a business goal.
+            - Pinterest example: user profiler, follower, feed, search, photo upload
+        - Service Discovery: zookeeper help services find each other by keeping track of registered names, addresses, ports. Health check help verify integrity and are done using HTTP endpoint. use key-value store for config values
+        - Application layer disadvantages:
+            - loosly couple services, requires a different approach from an architectural, operations, and process viewpoint
+            - increase complexity in terms of deployment and operations
         
             
         
