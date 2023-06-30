@@ -243,6 +243,58 @@
                                 - dynamic queries
                                 - data inconsistency
                                 - limited cache size
+    - NoSQL: lack true ACID and favor eventual consistency
+        - BASE
+            - Basically available: the system guarantees availablity
+            - Soft state: the state of the system may change over time, even without input
+            - Eventual consistency: the system will become consistent over a period of time, given that the system doesn't receive input during that period
+        - key-value store: hash table
+            - O(1) read and write, backed by memory or SSD
+            - maintain keys in lexicographic order, allowing efficient retrieval of key ranges, allowing for storing of metadata with a value
+            - high performance and used for simple data models or rapidly changing data such as an in memory cache layer. complexity is shifted to the application layer if additional operations are needed
+            - basis for more complex systems
+        - document store: key-value store with documents stored as values
+            - centered around documents XML JSON binary.
+            - provid APIs or a query language to query based on the internal structure of the document itself. Note many key value stores include features for working with a value's metadata, blurring the lines between these two storage types.
+            - documents are organized by collections, tags, metadata, or directories. Although documents can be organized or grouped together, documents may have fields that are completely different from each other.
+            - Provide high flexibility and are often used for working with occasionally changing data.
+        - wide column store: nested map ColumnFamily<RowKey, Columns<ColKey, Value, Timestamp>>
+        ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/n16iOGk.png)
+            - basic unit of data is a column (name/value pair). A column can be grouped in column families (analogous to a SQL table). Super column families further group column families. You can access each column independently with a row key, and columns with the same row key form a row. Each value contains a timestamp for versioning and for conflict resolution.
+            - Google: Bigtable. Open source: HBase, often used in Hadoop ecosystem. Cassandra from Facebook. maintain keys in lexicographic order, allowing efficient retrieval of selective key ranges.
+            - High availability, high scalability. often used for very large data sets.
+        - graph database: graph
+        ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/fNcl65g.png)
+            - each node is a record and each arc(edge) is a relationship between two nodes. Graph databases are optimized to represent complex relationships with many foreign keys or many to many relationships
+            - high performance for data models with complex relationships, such as social network. They are relatively new and not yet widely used.
+            - REST APIs
+    - SQL or NoSQL
+       ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/wXGqG5f.png)
+        - Reasons for SQL
+            - Structured data
+            - Strict schema
+            - Relational data
+            - Need for complex joins
+            - Transactions
+            - Clear patterns for scaling
+            - More established: developers, community, code, tools, etc
+            - Lookups by index are very fast
+        - Reasons for NoSQL:
+            - semi structured data
+            - dynamic or flexible schema
+            - non relational data
+            - no need for complex joins
+            - store many TB of data
+            - very data intensive workload
+            - very high throughput for IOPS
+        - Sample data well suited for NoSQL:
+            - rapid ingest of clickstream and log data
+            - leaderboard or scoring data
+            - temporary data such as a shopping cart
+            - frequently accessed (hot) tables
+            - metadata/lookup tables
+            
+                
         
 
 ## Reference
