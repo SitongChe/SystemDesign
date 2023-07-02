@@ -311,6 +311,21 @@
                 - fully formed serializable objects
                 - fully rendered HTML
             - avoid file based caching, as it makes cloning and auto scaling more difficult
+        - Caching at the database query level
+            - hash the query as a key and store the result to the cache.
+            - this approach suffers from expiration issues
+                - hard to delete a cached result with complex queries
+                - if one piece of data changes such as a table cell, need to delete all cached queries that might include the cached cell
+        - Caching at object level
+            - see the data as an object, similar to what you do with application code. Have your application assemble the dataset from the database into a class instance or a data structure
+                - remove the object from cache if its underlying data has changed
+                - allows for aync processing: workers assemble objects by consuming the latest cached object
+                - what to cache:
+                    - user sessions
+                    - fully rendered web pages
+                    - activity streams
+                    - user graph data
+                    
                 
                 
         
