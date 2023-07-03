@@ -325,7 +325,32 @@
                     - fully rendered web pages
                     - activity streams
                     - user graph data
-                    
+        - When to update the cache
+            - Cache aside
+            ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/ONjORqk.png)
+                - the application is responsible for reading and writing from storage, the cache does not interact with storage directly.
+                - the application dose the following:
+                    - look for entry in cache, resulting in a cache miss
+                    - load entry from the database
+                    - add entry to cache
+                    - return entry
+ '''def get_user(self, user_id):
+    user = cache.get("user.{0}", user_id)
+    if user is None:
+        user = db.query("SELECT * FROM users WHERE user_id = {0}", user_id)
+        if user is not None:
+            key = "user.{0}".format(user_id)
+            cache.set(key, json.dumps(user))
+    return user'''
+
+                - Memcached is generally used in this manner.
+                - Subsequent reads of data added to cache are fast.
+                - lazy loading. Only requested data is cached, which avoid filling up the cache with data that isn't requested
+                - cache aside disadvantages:
+                    - each cash miss results in three trips, which can cause a noticeable delay
+                    - data can become stale if it is updated in the database. this issue is mitigated by setting a time to live (TTL), which forces an update of the cache entry, or by using write through
+                    - when a node fails, it is replaced by a new empty node, increasing latency.
+            
                 
                 
         
