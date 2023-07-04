@@ -350,7 +350,25 @@
                     - each cash miss results in three trips, which can cause a noticeable delay
                     - data can become stale if it is updated in the database. this issue is mitigated by setting a time to live (TTL), which forces an update of the cache entry, or by using write through
                     - when a node fails, it is replaced by a new empty node, increasing latency.
+            - Write through
+            ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/0vBc0hN.png)
+                - the application uses the cache as the main data source, reading and writing data to it, while the cache is responsible for reading and writing to the database
+                    - application adds/updates entry in cache
+                    - cache synchronously writes entry to data store
+                    - return
+'''Application code:
+set_user(12345, {"foo":"bar"})
+
+Cache code:
+def set_user(user_id, values):
+    user = db.query("UPDATE Users WHERE id = {0}", user_id, values)
+    cache.set(user_id, user)'''
             
+                - write through is a slow operation due to write, but subsequent read of just written data are fast. Users are generally more tolerant of latency when updating data  than reading data. Data in cache is not stale.
+                - write trhough disadvantages:
+                    - when a new node is created due to failure or scaling. the new node will not cache entries until the entry is updated in the database. Cache aside in conjunction with write through can mitigated this issue.
+                    - most data written might never be read, which can be minimized with a TTL.
+
                 
                 
         
