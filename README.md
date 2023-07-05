@@ -368,6 +368,14 @@ def set_user(user_id, values):
                 - write trhough disadvantages:
                     - when a new node is created due to failure or scaling. the new node will not cache entries until the entry is updated in the database. Cache aside in conjunction with write through can mitigated this issue.
                     - most data written might never be read, which can be minimized with a TTL.
+            - Write behind (write back)
+            ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/rgSrvjG.png)
+                - in write behind, the app does the following:
+                    - add/update entry in cache
+                    - async write entry to the data store, improving write performance
+                - write behind disadvantages:
+                    - there could be data loss if the cache goes down prior to its contents hitting the data store
+                    - it is mmore complex to implement write behind than it is to implement cache aside or write through
 
                 
                 
