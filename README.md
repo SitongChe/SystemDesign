@@ -376,6 +376,16 @@ def set_user(user_id, values):
                 - write behind disadvantages:
                     - there could be data loss if the cache goes down prior to its contents hitting the data store
                     - it is mmore complex to implement write behind than it is to implement cache aside or write through
+            - Refresh ahead
+            ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/kxtjqgE.png)
+                - configure the cache to automatically refresh any recently accessed cache entry prior to its expiration
+                - refresh ahead can result in reduced latency vs read through if the cache can accurately predict which items are likely to be needed in the future
+                - refresh ahead disadvantages:
+                    - not accurately predicting which items are likely to be needed in the future can result in reduced performance than without refresh ahead
+            - Cache Disadvantages:
+                - need to maintain consistency between caches and the source of truth such as the database through cache invalidation
+                - cache invalidation is a difficult problem, there is additional complexity associated with when to update the cache
+                - need to make application changes such as adding Redis or memcached
 
                 
                 
