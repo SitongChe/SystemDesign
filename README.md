@@ -402,6 +402,59 @@ def set_user(user_id, values):
             - if queue start to grow significantly, the queue size can become larger than memory. Resulting in cache misses, disk reads, and even slower performance. Back pressure can help by limiting the queue size, thereby maintaining a high throughput rate and good response times for jobs already in the queue. Once the queue fills up, clients get a server bussy or HTTP 503 code to try again later. Clients can retry the request at a later time, perhaps with exponential backoff.
         - Asynchronism disadvantages
             - use cases such as inexpensive calculations and realtime workflows might be better suited for synchronous operations, as introducing queues can add delays and complexity
+    - Communication
+    ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/5KeocQs.jpg)
+        - HTTP
+            - HTTP is an application layer protocol relying on lower-level protocols such as TCP and UDP.
+            - A basic HTTP request consists of a verb (method) and a resource (endpoint). Below are common HTTP verbs:
+
+| Verb  | Description                                                  | Idempotent\* | Safe | Cacheable |
+|-------|--------------------------------------------------------------|--------------|------|-----------|
+| GET   | Reads a resource                                             | Yes          | Yes  | Yes       |
+| POST  | Creates a resource or triggers a process that handles data   | No           | No   | Yes if response contains freshness info |
+| PUT   | Creates or replaces a resource                               | Yes          | No   | No        |
+| PATCH | Partially updates a resource                                 | No           | No   | Yes if response contains freshness info |
+| DELETE| Deletes a resource                                           | Yes          | No   | No        |
+
+\*Idempotent: An operation is idempotent if multiple identical requests have the same effect as a single request.
+        - TCP
+        ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/JdAsdvG.jpg)
+            - useful in applications that require high reliability but less time critical, like web servers, database info, SMTP, FTP, SSH.
+            - use TCP over UDP when:
+                - you need all of the data to arrive intact
+                - you want to automatically make a best estimate use of the network throughput
+        - UDP
+        ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/yzDrJtA.jpg)
+            - UDP is connectionless. packets are guaranteed only at packets level. may reach the destination out of order or not at all. no support for congestion control. but more efficient.
+            - UDP can broadcast, sending datagrams to all devices on the subnet.
+            - useful in real time use cases such as VoIP, video chat, streaming, realtime multiplayer games
+            - use UDP over TCP when:
+                - you need the lowest latency
+                - late data is worse than loss of data
+                - you want to implement your own error correction
+    - Remote procedure call(PRC)
+    ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/iF4Mkb5.png)
+        - Protobuf, thrift, avro
+        - RPC is a request-response protocol:
+            - client program - calls the client stub procedure. the parameters are pushed onto the stack like a local procedure call
+            - client stub procedure - Marshals (packs) procedure id and arguments into a request message
+            - client communication module - OS sends the message from the client to the server
+            - server communication module - OS passes the incoming packets to the server stub procedure
+            - server stub procedure - unmarshalls the results, calls the server procedure matching the procedure id and passes the given arguments
+            - the server response repeats the steps above in reverse order
+        - RPC is focused on exposing behaviors. RPCs are often used for perf reasons with internal communications, as you can hand craft native calls to better fit your use case
+        - choose a native library (aka SDK) when:
+            - you know your target platform
+            - you want to control how your logic is accessed
+            - you want to control how error control happens off your library
+            - perf and end user experience is your primary concern
+        - HTTP APIs following REST tent to be used more often for public APIs
+        - RPC disadvantages:
+            - RPC clients become tightly coupled to the service implementation
+            - A new API must be defined for every new operation or use case
+            - it can be difficult to debug RPC
+            - might not be able to leverage existing tech out of the box. For example, it might require additional effort to ensure RPC calls are properly cached on caching servers such as Squid
+        
         
 
                 
