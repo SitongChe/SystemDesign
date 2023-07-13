@@ -487,6 +487,48 @@ def set_user(user_id, values):
         - use parameterized queries to prevent SQL injection
         - use the principle of least privilege
 
+## Real world architectures
+    ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/TcUo2fw.png)
+
+## Appendix
+- Powers of two table
+| Power | Exact Value         | Approx Value   | Bytes   |
+|-------|---------------------|----------------|---------|
+| 7     | 128                 |                |         |
+| 8     | 256                 |                |         |
+| 10    | 1024                | 1 thousand     | 1 KB    |
+| 16    | 65,536              |                | 64 KB   |
+| 20    | 1,048,576           | 1 million      | 1 MB    |
+| 30    | 1,073,741,824       | 1 billion      | 1 GB    |
+| 32    | 4,294,967,296       |                | 4 GB    |
+| 40    | 1,099,511,627,776   | 1 trillion     | 1 TB    |
+
+- Latency numbers every programmer should know
+| Task                                | Latency (ns)     | Latency (us)    | Latency (ms)   |
+|-------------------------------------|------------------|-----------------|----------------|
+| L1 cache reference                  | 0.5              |                 |                |
+| Branch mispredict                   | 5                |                 |                |
+| L2 cache reference                  | 7                |                 |                |
+| Mutex lock/unlock                   | 25               |                 |                |
+| Main memory reference               | 100              |                 |                |
+| Compress 1K bytes with Zippy        | 10,000           | 10              |                |
+| Send 1 KB bytes over 1 Gbps network | 10,000           | 10              |                |
+| Read 4 KB randomly from SSD*        | 150,000          | 150             |                |
+| Read 1 MB sequentially from memory  | 250,000          | 250             |                |
+| Round trip within same datacenter   | 500,000          | 500             |                |
+| Read 1 MB sequentially from SSD*    | 1,000,000        | 1,000           | 1              |
+| HDD seek                            | 10,000,000       | 10,000          | 10             |
+| Read 1 MB sequentially from 1 Gbps  | 10,000,000       | 10,000          | 10             |
+| Read 1 MB sequentially from HDD     | 30,000,000       | 30,000          | 30             |
+| Send packet CA->Netherlands->CA     | 150,000,000      | 150,000         | 150            |
+
+Notes
+-----
+1 ns = 10^-9 seconds
+1 us = 10^-6 seconds = 1,000 ns
+1 ms = 10^-3 seconds = 1,000 us = 1,000,000 ns
+
+    ![Alt Text](https://camo.githubusercontent.com/77f72259e1eb58596b564d1ad823af1853bc60a3/687474703a2f2f692e696d6775722e636f6d2f6b307431652e706e67)
                 
                 
         
