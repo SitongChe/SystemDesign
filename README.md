@@ -454,8 +454,38 @@ def set_user(user_id, values):
             - A new API must be defined for every new operation or use case
             - it can be difficult to debug RPC
             - might not be able to leverage existing tech out of the box. For example, it might require additional effort to ensure RPC calls are properly cached on caching servers such as Squid
+    - Representational state transfer (REST)
+        - REST is an carchitectural style enforcing a client/server model where the client acts on a set of resources managed by the server. The server provides a representation of resources and actions that can either manipulate or get a new representation of resources. All communication must be stateless and cacheable.
+        - 4 qualities of a RESTful interface:
+            - identify resources (URI in HTTP): use the same URI regardless of any operation
+            - change the representations (Verbs in HTTP): user verbs, headers, and body
+            - self descriptive error message (status response in HTTP): use status code, don't reinvent the wheel
+            - HATEOAS (HTML interface in HTTP): your web service should be fully accessible in a browser
+        - REST is focused on exposing data. It minimizes the coupling between client/server and is often used for public HTTP APIs. REST uses a more generic and uniform method of exposing resources through URIs, representation through headers, and actions through verbs such as GET, POST, PUT, DELETE, and PATCH. Being stateless, REST is great for horizontal scaling and partitioning.
+        - REST Disadvantages:
+            - focused on exposing data. not a good fit if resources are not naturally organized or accessed in a simple hierarchy. for example, returning all updated records from the past hour matching a particular set of events is not easily expressed as a path
+            - REST relies on a few verbs, which sometimes doesn't fit the use case. for example, moving expired documents to the archive folder is not cleanly fit within the verbs.
+            - fetching complicated resources with nested hierarchies requires multiple round trips between the client and server to render single views. e.g. fetching content of a blog entry and the comments on that entry.
+            - over time, more fields might be added to an API response and older clients will receive all new data fields, even those that they don't need, as a result, it bloats the payload size and lead to larger latencies
+            
+        - RPC and REST calls comparison
+
+| Operation                   | RPC                               | REST                               |
+|-----------------------------|-----------------------------------|------------------------------------|
+| Signup                      | POST /signup                      | POST /persons                      |
+| Resign                      | POST /resign                      | DELETE /persons/1234               |
+| Read a person               | GET /readPerson?personid=1234     | GET /persons/1234                  |
+| Read a person’s items list  | GET /readUsersItemsList?personid=1234 | GET /persons/1234/items         |
+| Add an item to a person’s items | POST /addItemToUsersItemsList | POST /persons/1234/items |
+| Update an item              | POST /modifyItem                  | PUT /items/456                      |
+| Delete an item              | POST /removeItem                  | DELETE /items/456                   |
+
         
-        
+    - Security
+        - encrypt in transit and at rest
+        - sanitize all user inputs or any input parameters exposed to user to prevent XSS and SQL injection
+        - use parameterized queries to prevent SQL injection
+        - use the principle of least privilege
 
                 
                 
