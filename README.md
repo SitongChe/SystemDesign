@@ -334,14 +334,6 @@
                     - load entry from the database
                     - add entry to cache
                     - return entry
- '''def get_user(self, user_id):
-    user = cache.get("user.{0}", user_id)
-    if user is None:
-        user = db.query("SELECT * FROM users WHERE user_id = {0}", user_id)
-        if user is not None:
-            key = "user.{0}".format(user_id)
-            cache.set(key, json.dumps(user))
-    return user'''
 
                 - Memcached is generally used in this manner.
                 - Subsequent reads of data added to cache are fast.
@@ -356,13 +348,7 @@
                     - application adds/updates entry in cache
                     - cache synchronously writes entry to data store
                     - return
-'''Application code:
-set_user(12345, {"foo":"bar"})
-
-Cache code:
-def set_user(user_id, values):
-    user = db.query("UPDATE Users WHERE id = {0}", user_id, values)
-    cache.set(user_id, user)'''
+                    
             
                 - write through is a slow operation due to write, but subsequent read of just written data are fast. Users are generally more tolerant of latency when updating data  than reading data. Data in cache is not stale.
                 - write trhough disadvantages:
@@ -406,9 +392,11 @@ def set_user(user_id, values):
     ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/5KeocQs.jpg)
         - HTTP
             - HTTP is an application layer protocol relying on lower-level protocols such as TCP and UDP.
-            - A basic HTTP request consists of a verb (method) and a resource (endpoint). Below are common HTTP verbs:
+            - A basic HTTP request consists of a verb (method) and a resource (endpoint).
+            - Below are common HTTP verbs
 
-| Verb  | Description                                                  | Idempotent\* | Safe | Cacheable |
+
+| Verb  | Description                                                  | Idempotent   | Safe | Cacheable |
 |-------|--------------------------------------------------------------|--------------|------|-----------|
 | GET   | Reads a resource                                             | Yes          | Yes  | Yes       |
 | POST  | Creates a resource or triggers a process that handles data   | No           | No   | Yes if response contains freshness info |
@@ -416,15 +404,21 @@ def set_user(user_id, values):
 | PATCH | Partially updates a resource                                 | No           | No   | Yes if response contains freshness info |
 | DELETE| Deletes a resource                                           | Yes          | No   | No        |
 
-\*Idempotent: An operation is idempotent if multiple identical requests have the same effect as a single request.
+        - Idempotent: An operation is idempotent if multiple identical requests have the same effect as a single request.
+
+   
         - TCP
+          
         ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/JdAsdvG.jpg)
+
             - useful in applications that require high reliability but less time critical, like web servers, database info, SMTP, FTP, SSH.
             - use TCP over UDP when:
                 - you need all of the data to arrive intact
                 - you want to automatically make a best estimate use of the network throughput
         - UDP
+          
         ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/yzDrJtA.jpg)
+
             - UDP is connectionless. packets are guaranteed only at packets level. may reach the destination out of order or not at all. no support for congestion control. but more efficient.
             - UDP can broadcast, sending datagrams to all devices on the subnet.
             - useful in real time use cases such as VoIP, video chat, streaming, realtime multiplayer games
@@ -488,10 +482,12 @@ def set_user(user_id, values):
         - use the principle of least privilege
 
 ## Real world architectures
-    ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/TcUo2fw.png)
+![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/TcUo2fw.png)
 
 ## Appendix
+
 - Powers of two table
+  
 | Power | Exact Value         | Approx Value   | Bytes   |
 |-------|---------------------|----------------|---------|
 | 7     | 128                 |                |         |
@@ -503,7 +499,9 @@ def set_user(user_id, values):
 | 32    | 4,294,967,296       |                | 4 GB    |
 | 40    | 1,099,511,627,776   | 1 trillion     | 1 TB    |
 
+
 - Latency numbers every programmer should know
+  
 | Task                                | Latency (ns)     | Latency (us)    | Latency (ms)   |
 |-------------------------------------|------------------|-----------------|----------------|
 | L1 cache reference                  | 0.5              |                 |                |
@@ -513,10 +511,10 @@ def set_user(user_id, values):
 | Main memory reference               | 100              |                 |                |
 | Compress 1K bytes with Zippy        | 10,000           | 10              |                |
 | Send 1 KB bytes over 1 Gbps network | 10,000           | 10              |                |
-| Read 4 KB randomly from SSD*        | 150,000          | 150             |                |
+| Read 4 KB randomly from SSD         | 150,000          | 150             |                |
 | Read 1 MB sequentially from memory  | 250,000          | 250             |                |
 | Round trip within same datacenter   | 500,000          | 500             |                |
-| Read 1 MB sequentially from SSD*    | 1,000,000        | 1,000           | 1              |
+| Read 1 MB sequentially from SSD     | 1,000,000        | 1,000           | 1              |
 | HDD seek                            | 10,000,000       | 10,000          | 10             |
 | Read 1 MB sequentially from 1 Gbps  | 10,000,000       | 10,000          | 10             |
 | Read 1 MB sequentially from HDD     | 30,000,000       | 30,000          | 30             |
@@ -528,9 +526,8 @@ Notes
 1 us = 10^-6 seconds = 1,000 ns
 1 ms = 10^-3 seconds = 1,000 us = 1,000,000 ns
 
-    ![Alt Text](https://camo.githubusercontent.com/77f72259e1eb58596b564d1ad823af1853bc60a3/687474703a2f2f692e696d6775722e636f6d2f6b307431652e706e67)
-                
-                
+![Alt Text](https://camo.githubusercontent.com/77f72259e1eb58596b564d1ad823af1853bc60a3/687474703a2f2f692e696d6775722e636f6d2f6b307431652e706e67)
+               
         
 
 ## Reference
