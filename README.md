@@ -334,7 +334,16 @@
                     - load entry from the database
                     - add entry to cache
                     - return entry
-
+                    ```python
+                    def get_user(self, user_id):
+                        user = cache.get("user.{0}", user_id)
+                        if user is None:
+                            user = db.query("SELECT * FROM users WHERE user_id = {0}", user_id)
+                            if user is not None:
+                                key = "user.{0}".format(user_id)
+                                cache.set(key, json.dumps(user))
+                        return user
+                    ```
                 - Memcached is generally used in this manner.
                 - Subsequent reads of data added to cache are fast.
                 - lazy loading. Only requested data is cached, which avoid filling up the cache with data that isn't requested
@@ -348,6 +357,15 @@
                     - application adds/updates entry in cache
                     - cache synchronously writes entry to data store
                     - return
+                    ```python
+                    # Application code:
+                    set_user(12345, {"foo":"bar"})
+                    
+                    # Cache code:
+                    def set_user(user_id, values):
+                        user = db.query("UPDATE Users WHERE id = {0}", user_id, values)
+                        cache.set(user_id, user)
+                    ```
                     
             
                 - write through is a slow operation due to write, but subsequent read of just written data are fast. Users are generally more tolerant of latency when updating data  than reading data. Data in cache is not stale.
