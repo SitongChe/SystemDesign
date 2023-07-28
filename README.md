@@ -405,19 +405,15 @@
         
         Idempotent: An operation is idempotent if multiple identical requests have the same effect as a single request.
         
-        - TCP
-        
-        ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/JdAsdvG.jpg)
-        
+        - TCP        
+        ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/JdAsdvG.jpg)      
           - Useful in applications that require high reliability but less time-critical, like web servers, database info, SMTP, FTP, SSH.
           - Use TCP over UDP when:
             - You need all of the data to arrive intact
             - You want to automatically make a best estimate use of the network throughput
       
-        - UDP
-          
+        - UDP        
         ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/yzDrJtA.jpg)
-
             - UDP is connectionless. packets are guaranteed only at packets level. may reach the destination out of order or not at all. no support for congestion control. but more efficient.
             - UDP can broadcast, sending datagrams to all devices on the subnet.
             - useful in real time use cases such as VoIP, video chat, streaming, realtime multiplayer games
