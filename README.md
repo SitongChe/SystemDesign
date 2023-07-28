@@ -391,30 +391,29 @@
     - Communication
     ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/5KeocQs.jpg)
         - HTTP
-            - HTTP is an application layer protocol relying on lower-level protocols such as TCP and UDP.
-            - A basic HTTP request consists of a verb (method) and a resource (endpoint).
-            - Below are common HTTP verbs
-
-
-| Verb  | Description                                                  | Idempotent   | Safe | Cacheable |
-|-------|--------------------------------------------------------------|--------------|------|-----------|
-| GET   | Reads a resource                                             | Yes          | Yes  | Yes       |
-| POST  | Creates a resource or triggers a process that handles data   | No           | No   | Yes if response contains freshness info |
-| PUT   | Creates or replaces a resource                               | Yes          | No   | No        |
-| PATCH | Partially updates a resource                                 | No           | No   | Yes if response contains freshness info |
-| DELETE| Deletes a resource                                           | Yes          | No   | No        |
-
-        - Idempotent: An operation is idempotent if multiple identical requests have the same effect as a single request.
-
-   
+          - HTTP is an application layer protocol relying on lower-level protocols such as TCP and UDP.
+          - A basic HTTP request consists of a verb (method) and a resource (endpoint).
+          - Below are common HTTP verbs
+        
+        | Verb  | Description                                                  | Idempotent   | Safe | Cacheable               |
+        |-------|--------------------------------------------------------------|--------------|------|-------------------------|
+        | GET   | Reads a resource                                             | Yes          | Yes  | Yes                     |
+        | POST  | Creates a resource or triggers a process that handles data   | No           | No   | Yes with freshness info |
+        | PUT   | Creates or replaces a resource                               | Yes          | No   | No                      |
+        | PATCH | Partially updates a resource                                 | No           | No   | Yes with freshness info |
+        | DELETE| Deletes a resource                                           | Yes          | No   | No                      |
+        
+        Idempotent: An operation is idempotent if multiple identical requests have the same effect as a single request.
+        
         - TCP
-          
+        
         ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/JdAsdvG.jpg)
-
-            - useful in applications that require high reliability but less time critical, like web servers, database info, SMTP, FTP, SSH.
-            - use TCP over UDP when:
-                - you need all of the data to arrive intact
-                - you want to automatically make a best estimate use of the network throughput
+        
+          - Useful in applications that require high reliability but less time-critical, like web servers, database info, SMTP, FTP, SSH.
+          - Use TCP over UDP when:
+            - You need all of the data to arrive intact
+            - You want to automatically make a best estimate use of the network throughput
+      
         - UDP
           
         ![Alt Text](https://github.com/donnemartin/system-design-primer/blob/master/images/yzDrJtA.jpg)
